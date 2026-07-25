@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VELVE — майни VEL в Telegram</title>
+<style>
+  :root{color-scheme:light}
+  body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}
+  img{max-width:100%}
+</style>
+<style>
+  :root {
+    --ground: #EFEAF2;
+    --ground-2: #E7E0EC;
+    --panel: #FFFFFF;
+    --panel-line: rgba(42, 31, 48, 0.10);
+    --ink: #241A29;
+    --ink-dim: #6E6277;
+    --accent: #9C7A2E;
+    --accent-ink: #FFFFFF;
+    --accent-soft: rgba(156, 122, 46, 0.14);
+    --rule: rgba(42, 31, 48, 0.16);
+    --status-fg: #3E7A45;
+    --status-bg: rgba(62, 122, 69, 0.12);
+    --status-active-fg: #B25F1F;
+    --status-active-bg: rgba(178, 95, 31, 0.13);
+    --status-planned-fg: #6E6277;
+    --status-planned-bg: rgba(110, 98, 119, 0.12);
+    --shadow: 0 1px 2px rgba(36, 26, 41, 0.06), 0 8px 24px -12px rgba(36, 26, 41, 0.18);
+    --shadow-lg: 0 4px 8px rgba(36, 26, 41, 0.08), 0 24px 48px -20px rgba(36, 26, 41, 0.28);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground: #130E19;
+      --ground-2: #1A1421;
+      --panel: #1D1624;
+      --panel-line: rgba(241, 236, 245, 0.09);
+      --ink: #F1ECF5;
+      --ink-dim: #AB9DB8;
+      --accent: #D2AC5D;
+      --accent-ink: #241A29;
+      --accent-soft: rgba(210, 172, 93, 0.14);
+      --rule: rgba(241, 236, 245, 0.14);
+      --status-fg: #8FCB93;
+      --status-bg: rgba(143, 203, 147, 0.14);
+      --status-active-fg: #E7A468;
+      --status-active-bg: rgba(231, 164, 104, 0.15);
+      --status-planned-fg: #AB9DB8;
+      --status-planned-bg: rgba(171, 157, 184, 0.14);
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 32px -16px rgba(0, 0, 0, 0.6);
+      --shadow-lg: 0 4px 10px rgba(0, 0, 0, 0.4), 0 30px 60px -24px rgba(0, 0, 0, 0.7);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #130E19; --ground-2: #1A1421; --panel: #1D1624; --panel-line: rgba(241, 236, 245, 0.09);
+    --ink: #F1ECF5; --ink-dim: #AB9DB8; --accent: #D2AC5D; --accent-ink: #241A29; --accent-soft: rgba(210, 172, 93, 0.14);
+    --rule: rgba(241, 236, 245, 0.14); --status-fg: #8FCB93; --status-bg: rgba(143, 203, 147, 0.14);
+    --status-active-fg: #E7A468; --status-active-bg: rgba(231, 164, 104, 0.15);
+    --status-planned-fg: #AB9DB8; --status-planned-bg: rgba(171, 157, 184, 0.14);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 32px -16px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 4px 10px rgba(0, 0, 0, 0.4), 0 30px 60px -24px rgba(0, 0, 0, 0.7);
+  }
+
+  :root[data-theme="light"] {
+    --ground: #EFEAF2; --ground-2: #E7E0EC; --panel: #FFFFFF; --panel-line: rgba(42, 31, 48, 0.10);
+    --ink: #241A29; --ink-dim: #6E6277; --accent: #9C7A2E; --accent-ink: #FFFFFF; --accent-soft: rgba(156, 122, 46, 0.14);
+    --rule: rgba(42, 31, 48, 0.16); --status-fg: #3E7A45; --status-bg: rgba(62, 122, 69, 0.12);
+    --status-active-fg: #B25F1F; --status-active-bg: rgba(178, 95, 31, 0.13);
+    --status-planned-fg: #6E6277; --status-planned-bg: rgba(110, 98, 119, 0.12);
+    --shadow: 0 1px 2px rgba(36, 26, 41, 0.06), 0 8px 24px -12px rgba(36, 26, 41, 0.18);
+    --shadow-lg: 0 4px 8px rgba(36, 26, 41, 0.08), 0 24px 48px -20px rgba(36, 26, 41, 0.28);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--ground); color: var(--ink); }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  .mono { font-family: "SF Mono", "Cascadia Code", "Roboto Mono", Consolas, "Liberation Mono", monospace; font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+  .display { font-family: "Big Caslon", "Didot", Georgia, "Times New Roman", serif; }
+  a { color: inherit; }
+  img { max-width: 100%; display: block; }
+
+  /* ---------- nav ---------- */
+  nav.bar {
+    position: sticky; top: 0; z-index: 20;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.9rem clamp(1.25rem, 4vw, 3rem);
+    background: color-mix(in srgb, var(--ground) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--panel-line);
+  }
+  .brand { display: flex; align-items: center; gap: 0.6rem; font-weight: 700; }
+  .brand img { width: 28px; height: 28px; border-radius: 8px; box-shadow: var(--shadow); }
+  .brand span { font-family: "Big Caslon", "Didot", Georgia, serif; font-size: 1.15rem; letter-spacing: 0.02em; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.4em;
+    padding: 0.62em 1.15em; border-radius: 999px; font-size: 0.88rem; font-weight: 600;
+    text-decoration: none; border: 1px solid transparent; white-space: nowrap;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); box-shadow: var(--shadow); }
+  .btn.primary:hover { box-shadow: var(--shadow-lg); }
+  .btn.ghost { border-color: var(--rule); color: var(--ink); }
+  .btn.ghost:hover { background: var(--panel); }
+  .btn.sm { padding: 0.5em 0.95em; font-size: 0.82rem; }
+
+  /* ---------- hero ---------- */
+  header.hero {
+    position: relative;
+    padding: clamp(3.5rem, 9vw, 7rem) clamp(1.25rem, 4vw, 3rem) clamp(2.5rem, 6vw, 4rem);
+    text-align: center;
+    overflow: hidden;
+  }
+  canvas#sheen {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    z-index: 0; opacity: 0.55; pointer-events: none;
+  }
+  .hero-inner { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+  .hero-logo { width: 76px; height: 76px; border-radius: 20px; margin: 0 auto 1.6rem; box-shadow: var(--shadow-lg); }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 0.6em;
+    font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--accent);
+    margin: 0 0 1.3rem; justify-content: center;
+  }
+  .eyebrow::before, .eyebrow::after { content: ""; width: 1.3em; height: 1px; background: var(--accent); }
+
+  .wordmark {
+    font-size: clamp(3rem, 11vw, 5.4rem);
+    font-weight: 500; letter-spacing: 0.01em; line-height: 1;
+    margin: 0 0 1rem; text-wrap: balance;
+  }
+  .tagline {
+    font-size: clamp(1.05rem, 2.2vw, 1.3rem); color: var(--ink-dim);
+    max-width: 42ch; margin: 0 auto 2.2rem; text-wrap: pretty;
+  }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 0.7rem; justify-content: center; margin-bottom: 2.6rem; }
+  .cta-row .btn { padding: 0.85em 1.6em; font-size: 0.95rem; }
+
+  /* ---------- facts strip ---------- */
+  .facts {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem;
+  }
+  .fact {
+    display: inline-flex; align-items: center; gap: 0.5em;
+    padding: 0.5em 1em; border-radius: 999px;
+    background: var(--panel); border: 1px solid var(--panel-line); box-shadow: var(--shadow);
+    font-size: 0.82rem;
+  }
+  .fact .k { color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.7rem; }
+  .fact .v { font-weight: 600; }
+  .fact.status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--status-fg); display: inline-block; }
+  .fact.status .v { color: var(--status-fg); }
+  .fact button.copy {
+    all: unset; cursor: pointer; color: var(--accent); font-size: 0.72rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.04em;
+  }
+
+  /* ---------- sections ---------- */
+  main { max-width: 960px; margin: 0 auto; padding: 0 clamp(1.25rem, 4vw, 3rem); }
+  section { padding: clamp(3rem, 7vw, 5rem) 0; border-top: 1px solid var(--rule); }
+  section:first-child { border-top: none; }
+
+  .section-head { max-width: 620px; margin: 0 auto 2.4rem; text-align: center; }
+  .section-head .eyebrow { margin-bottom: 0.8rem; }
+  .section-head h2 { font-size: clamp(1.7rem, 4vw, 2.3rem); font-weight: 500; margin: 0 0 0.7rem; text-wrap: balance; }
+  .section-head p { color: var(--ink-dim); margin: 0; }
+
+  /* about cards */
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .card {
+    background: var(--panel); border: 1px solid var(--panel-line); border-radius: 18px;
+    padding: 1.6rem 1.5rem; box-shadow: var(--shadow);
+  }
+  .card .num { font-size: 0.76rem; color: var(--accent); margin-bottom: 0.8rem; }
+  .card h3 { font-size: 1.05rem; margin: 0 0 0.5rem; font-weight: 700; }
+  .card p { margin: 0; color: var(--ink-dim); font-size: 0.92rem; }
+
+  /* roadmap timeline (compact) */
+  .timeline { position: relative; padding-left: 1.9rem; max-width: 640px; margin: 0 auto; }
+  .timeline::before { content: ""; position: absolute; left: 5px; top: 0.5rem; bottom: 0.5rem; width: 1px; background: var(--rule); }
+  .phase { position: relative; padding-bottom: 2.2rem; }
+  .phase:last-child { padding-bottom: 0; }
+  .phase::before {
+    content: ""; position: absolute; left: -1.9rem; top: 0.4rem; width: 11px; height: 11px;
+    border-radius: 50%; background: var(--ground); border: 2px solid var(--rule);
+  }
+  .phase.done::before { border-color: var(--status-fg); background: var(--status-fg); }
+  .phase.active::before { border-color: var(--status-active-fg); background: var(--status-active-fg); }
+  .phase-meta { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.45rem; flex-wrap: wrap; }
+  .phase-when { font-size: 0.75rem; color: var(--ink-dim); }
+  .pill { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.06em; padding: 0.25em 0.65em; border-radius: 999px; font-weight: 700; }
+  .pill.done { color: var(--status-fg); background: var(--status-bg); }
+  .pill.active { color: var(--status-active-fg); background: var(--status-active-bg); }
+  .pill.planned { color: var(--status-planned-fg); background: var(--status-planned-bg); }
+  .phase h3 { font-size: 1.2rem; font-weight: 600; margin: 0 0 0.4rem; font-family: -apple-system, sans-serif; }
+  .phase ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.35rem; }
+  .phase li { position: relative; padding-left: 1.1rem; color: var(--ink-dim); font-size: 0.9rem; }
+  .phase li::before { content: "—"; position: absolute; left: 0; color: var(--rule); }
+  .phase.done li, .phase.active li { color: var(--ink); }
+
+  /* final cta */
+  .final {
+    text-align: center; border-radius: 24px; padding: clamp(2.5rem, 6vw, 4rem) 1.5rem;
+    background: linear-gradient(180deg, var(--panel), var(--ground-2));
+    border: 1px solid var(--panel-line); box-shadow: var(--shadow-lg);
+  }
+  .final h2 { font-size: clamp(1.6rem, 4vw, 2.1rem); font-weight: 500; margin: 0 0 0.6rem; }
+  .final p { color: var(--ink-dim); margin: 0 0 1.6rem; }
+
+  footer {
+    padding: 2.5rem clamp(1.25rem, 4vw, 3rem) 3rem; text-align: center;
+    color: var(--ink-dim); font-size: 0.8rem;
+  }
+  footer .flinks { display: flex; gap: 1.2rem; justify-content: center; margin-bottom: 1rem; flex-wrap: wrap; }
+  footer .flinks a { text-decoration: none; color: var(--ink); font-weight: 600; font-size: 0.85rem; }
+  footer .fine { max-width: 46ch; margin: 0 auto; }
+
+  @media (max-width: 720px) {
+    .cards { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .brand span { display: none; }
+    .timeline { padding-left: 1.5rem; }
+    .phase::before { left: -1.5rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="bar">
+  <a class="brand" href="#top">
+    <img src="https://i.ibb.co/6MHDbq2/81925-1.png" alt="VELVE" />
+    <span>VELVE</span>
+  </a>
+  <a class="btn primary sm" href="https://t.me/Velveebot" target="_blank" rel="noopener">Открыть бота</a>
+</nav>
+
+<header class="hero" id="top">
+  <canvas id="sheen"></canvas>
+  <div class="hero-inner">
+    <img class="hero-logo" src="https://i.ibb.co/6MHDbq2/81925-1.png" alt="VELVE logo" />
+    <p class="eyebrow mono">GRAM Network · Telegram Mini App</p>
+    <h1 class="wordmark display">VELVE</h1>
+    <p class="tagline">Майни VEL, не выходя из Telegram. Запускай майнеров в боте — они приносят доход, пока ты просто листаешь ленту.</p>
+    <div class="cta-row">
+      <a class="btn primary" href="https://t.me/Velveebot" target="_blank" rel="noopener">Открыть бота →</a>
+      <a class="btn ghost" href="https://t.me/Velve_ch" target="_blank" rel="noopener">Telegram-канал</a>
+    </div>
+    <div class="facts">
+      <span class="fact"><span class="k mono">Тикер</span><span class="v mono">VEL</span></span>
+      <span class="fact"><span class="k mono">Сеть</span><span class="v mono">GRAM</span></span>
+      <span class="fact status"><span class="dot"></span><span class="v mono">в торгах</span></span>
+      <span class="fact">
+        <span class="k mono">Контракт</span>
+        <span class="v mono" id="addr-short">EQD-…YUgW</span>
+        <button class="copy" id="copy-btn" type="button">копировать</button>
+      </span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="about">
+    <div class="section-head">
+      <p class="eyebrow mono">Что это</p>
+      <h2 class="display">Бот, который платит за внимание</h2>
+      <p>VELVE выращивает живую Telegram-аудиторию через игровую механику майнинга — и монетизирует её в пользу держателей VEL.</p>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="num mono">01</div>
+        <h3>Майнинг в боте</h3>
+        <p>Заходишь в Telegram-бота и запускаешь майнеров — они приносят VEL со временем, без сторонних приложений.</p>
+      </div>
+      <div class="card">
+        <div class="num mono">02</div>
+        <h3>Живая аудитория</h3>
+        <p>Растим сообщество, чтобы предлагать рекламные интеграции и приводить трафик партнёрским продуктам.</p>
+      </div>
+      <div class="card">
+        <div class="num mono">03</div>
+        <h3>Кошелёк VELVE</h3>
+        <p>В разработке — нативный кошелёк для наград, стейкинга и доступа к рекламной сети.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="roadmap">
+    <div class="section-head">
+      <p class="eyebrow mono">План</p>
+      <h2 class="display">Дорожная карта</h2>
+      <p>Сроки ориентировочные и могут сдвигаться в зависимости от хода разработки и рынка.</p>
+    </div>
+
+    <div class="timeline">
+      <article class="phase done">
+        <div class="phase-meta"><span class="pill done">Готово</span><span class="phase-when mono">до Q3 2026</span></div>
+        <h3>Фундамент</h3>
+        <ul>
+          <li>Запуск Telegram-бота с механикой майнеров</li>
+          <li>Выпуск токена VEL в сети GRAM</li>
+          <li>Рост живого комьюнити вокруг бота</li>
+        </ul>
+      </article>
+
+      <article class="phase active">
+        <div class="phase-meta"><span class="pill active">В работе</span><span class="phase-when mono">Q3 – Q4 2026</span></div>
+        <h3>Листинги и ликвидность</h3>
+        <ul>
+          <li>Первый листинг и живые торги на DEX</li>
+          <li>Заявка на включение в реестр Tonkeeper (ton-assets)</li>
+          <li>Углубление пулов ликвидности</li>
+          <li>Масштабирование базы пользователей бота-майнера</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <div class="phase-meta"><span class="pill planned">План</span><span class="phase-when mono">Q4 2026 – Q1 2027</span></div>
+        <h3>Аудитория и монетизация</h3>
+        <ul>
+          <li>Рекламные места для партнёров внутри бота</li>
+          <li>Партнёрства по трафику на внешние продукты</li>
+          <li>Партнёрства с проектами, которым нужен живой трафик</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <div class="phase-meta"><span class="pill planned">План</span><span class="phase-when mono">Q1 – Q2 2027</span></div>
+        <h3>Кошелёк VELVE</h3>
+        <ul>
+          <li>Разработка нативного кошелька VELVE</li>
+          <li>Начисление наград майнеров напрямую в кошелёк</li>
+          <li>Доступ к рекламной сети через кошелёк</li>
+          <li>Стейкинг в кошельке VELVE</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <div class="phase-meta"><span class="pill planned">План</span><span class="phase-when mono">Q2 2027</span></div>
+        <h3>Расширение экосистемы</h3>
+        <ul>
+          <li>Выход на централизованные биржи (CEX)</li>
+          <li>Дальнейший рост ликвидности</li>
+          <li>Развитие кошелька и рекламной сети</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <div class="phase-meta"><span class="pill planned">План</span><span class="phase-when mono">Q3 – Q4 2027</span></div>
+        <h3>Игровая экосистема</h3>
+        <ul>
+          <li>Создание игрового контента</li>
+          <li>Внедрение токена VELVE для оплаты на сторонних сервисах</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section id="join">
+    <div class="final">
+      <h2 class="display">Начни майнить за пару минут</h2>
+      <p>Открой бота в Telegram, запусти майнеров и следи за прогрессом в канале проекта.</p>
+      <div class="cta-row" style="margin-bottom:0;">
+        <a class="btn primary" href="https://t.me/Velveebot" target="_blank" rel="noopener">Открыть бота →</a>
+        <a class="btn ghost" href="https://t.me/Velve_ch" target="_blank" rel="noopener">Telegram-канал</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="flinks">
+    <a href="https://t.me/Velveebot" target="_blank" rel="noopener">Бот</a>
+    <a href="https://t.me/Velve_ch" target="_blank" rel="noopener">Канал</a>
+    <a href="https://tonviewer.com/EQD-dshsvEChhTpmLdUYzMt5JvK9YXXxfwZdybkVTkx3YUgW" target="_blank" rel="noopener">Контракт в эксплорере</a>
+  </div>
+  <p class="fine">VELVE · $VEL на GRAM. Сроки дорожной карты ориентировочные и могут меняться.</p>
+</footer>
+
+<script>
+  (function () {
+    var full = "EQD-dshsvEChhTpmLdUYzMt5JvK9YXXxfwZdybkVTkx3YUgW";
+    var btn = document.getElementById("copy-btn");
+    btn.addEventListener("click", function () {
+      var done = function () {
+        btn.textContent = "скопировано";
+        setTimeout(function () { btn.textContent = "копировать"; }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(full).then(done).catch(done);
+      } else {
+        done();
+      }
+    });
+  })();
+
+  (function () {
+    var canvas = document.getElementById("sheen");
+    var ctx = canvas.getContext("2d");
+    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var w, h, dpr;
+
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = canvas.clientWidth;
+      h = canvas.clientHeight;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function accentRGB() {
+      var dark = document.documentElement.getAttribute("data-theme") === "dark" ||
+        (window.matchMedia("(prefers-color-scheme: dark)").matches &&
+          document.documentElement.getAttribute("data-theme") !== "light");
+      return dark ? "210,172,93" : "156,122,46";
+    }
+
+    function draw(t) {
+      ctx.clearRect(0, 0, w, h);
+      var rgb = accentRGB();
+      var cx = w * 0.5 + Math.sin(t * 0.00012) * w * 0.28;
+      var cy = h * 0.35 + Math.cos(t * 0.00009) * h * 0.18;
+      var r = Math.max(w, h) * 0.55;
+      var grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+      grad.addColorStop(0, "rgba(" + rgb + ",0.22)");
+      grad.addColorStop(0.5, "rgba(" + rgb + ",0.08)");
+      grad.addColorStop(1, "rgba(" + rgb + ",0)");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, w, h);
+
+      var cx2 = w * 0.7 - Math.sin(t * 0.00015) * w * 0.22;
+      var cy2 = h * 0.7 - Math.cos(t * 0.00011) * h * 0.22;
+      var grad2 = ctx.createRadialGradient(cx2, cy2, 0, cx2, cy2, r * 0.7);
+      grad2.addColorStop(0, "rgba(" + rgb + ",0.14)");
+      grad2.addColorStop(1, "rgba(" + rgb + ",0)");
+      ctx.fillStyle = grad2;
+      ctx.fillRect(0, 0, w, h);
+    }
+
+    resize();
+    window.addEventListener("resize", resize);
+
+    if (reduced) {
+      draw(0);
+    } else {
+      function loop(t) {
+        draw(t);
+        requestAnimationFrame(loop);
+      }
+      requestAnimationFrame(loop);
+    }
+  })();
+</script>
+
+</body>
+</html>
