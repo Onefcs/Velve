@@ -94,10 +94,12 @@
     background: color-mix(in srgb, var(--ground) 88%, transparent);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--panel-line);
+    gap: 0.8rem;
   }
   .brand { display: flex; align-items: center; gap: 0.6rem; font-weight: 700; }
   .brand img { width: 28px; height: 28px; border-radius: 8px; box-shadow: var(--shadow); }
   .brand span { font-family: "Big Caslon", "Didot", Georgia, serif; font-size: 1.15rem; letter-spacing: 0.02em; }
+  .nav-right { display: flex; align-items: center; gap: 0.6rem; }
   .btn {
     display: inline-flex; align-items: center; gap: 0.4em;
     padding: 0.62em 1.15em; border-radius: 999px; font-size: 0.88rem; font-weight: 600;
@@ -110,6 +112,18 @@
   .btn.ghost { border-color: var(--rule); color: var(--ink); }
   .btn.ghost:hover { background: var(--panel); }
   .btn.sm { padding: 0.5em 0.95em; font-size: 0.82rem; }
+
+  /* ---------- lang switch ---------- */
+  .lang-switch {
+    display: inline-flex; align-items: center; padding: 0.2rem;
+    border-radius: 999px; border: 1px solid var(--rule); background: var(--panel);
+  }
+  .lang-btn {
+    all: unset; cursor: pointer; padding: 0.32em 0.7em; border-radius: 999px;
+    font-size: 0.76rem; font-weight: 700; letter-spacing: 0.03em; color: var(--ink-dim);
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .lang-btn.active { background: var(--accent); color: var(--accent-ink); }
 
   /* ---------- hero ---------- */
   header.hero {
@@ -243,7 +257,13 @@
     <img src="https://i.ibb.co/6MHDbq2/81925-1.png" alt="VELVE" />
     <span>VELVE</span>
   </a>
-  <a class="btn primary sm" href="https://t.me/Velveebot" target="_blank" rel="noopener">Открыть бота</a>
+  <div class="nav-right">
+    <div class="lang-switch" role="group" aria-label="Language / Язык">
+      <button type="button" class="lang-btn" data-lang="ru">RU</button>
+      <button type="button" class="lang-btn" data-lang="en">EN</button>
+    </div>
+    <a class="btn primary sm" data-i18n="nav_open_bot" href="https://t.me/Velveebot" target="_blank" rel="noopener">Открыть бота</a>
+  </div>
 </nav>
 
 <header class="hero" id="top">
@@ -252,19 +272,19 @@
     <img class="hero-logo" src="https://i.ibb.co/6MHDbq2/81925-1.png" alt="VELVE logo" />
     <p class="eyebrow mono">GRAM Network · Telegram Mini App</p>
     <h1 class="wordmark display">VELVE</h1>
-    <p class="tagline">Майни VEL, не выходя из Telegram. Запускай майнеров в боте — они приносят доход, пока ты просто листаешь ленту.</p>
+    <p class="tagline" data-i18n="hero_tagline">Майни VEL, не выходя из Telegram. Запускай майнеров в боте — они приносят доход, пока ты просто листаешь ленту.</p>
     <div class="cta-row">
-      <a class="btn primary" href="https://t.me/Velveebot" target="_blank" rel="noopener">Открыть бота →</a>
-      <a class="btn ghost" href="https://t.me/Velve_ch" target="_blank" rel="noopener">Telegram-канал</a>
+      <a class="btn primary" data-i18n="cta_open_bot" href="https://t.me/Velveebot" target="_blank" rel="noopener">Открыть бота →</a>
+      <a class="btn ghost" data-i18n="cta_channel" href="https://t.me/Velve_ch" target="_blank" rel="noopener">Telegram-канал</a>
     </div>
     <div class="facts">
-      <span class="fact"><span class="k mono">Тикер</span><span class="v mono">VEL</span></span>
-      <span class="fact"><span class="k mono">Сеть</span><span class="v mono">GRAM</span></span>
-      <span class="fact status"><span class="dot"></span><span class="v mono">в торгах</span></span>
+      <span class="fact"><span class="k mono" data-i18n="fact_ticker_k">Тикер</span><span class="v mono">VEL</span></span>
+      <span class="fact"><span class="k mono" data-i18n="fact_network_k">Сеть</span><span class="v mono">GRAM</span></span>
+      <span class="fact status"><span class="dot"></span><span class="v mono" data-i18n="fact_status_v">в торгах</span></span>
       <span class="fact">
-        <span class="k mono">Контракт</span>
+        <span class="k mono" data-i18n="fact_contract_k">Контракт</span>
         <span class="v mono" id="addr-short">EQD-…YUgW</span>
-        <button class="copy" id="copy-btn" type="button">копировать</button>
+        <button class="copy" id="copy-btn" type="button" data-i18n="copy_default">копировать</button>
       </span>
     </div>
   </div>
@@ -273,95 +293,95 @@
 <main>
   <section id="about">
     <div class="section-head">
-      <p class="eyebrow mono">Что это</p>
-      <h2 class="display">Бот, который платит за внимание</h2>
-      <p>VELVE выращивает живую Telegram-аудиторию через игровую механику майнинга — и монетизирует её в пользу держателей VEL.</p>
+      <p class="eyebrow mono" data-i18n="about_eyebrow">Что это</p>
+      <h2 class="display" data-i18n="about_h2">Бот, который платит за внимание</h2>
+      <p data-i18n="about_p">VELVE выращивает живую Telegram-аудиторию через игровую механику майнинга — и монетизирует её в пользу держателей VEL.</p>
     </div>
     <div class="cards">
       <div class="card">
         <div class="num mono">01</div>
-        <h3>Майнинг в боте</h3>
-        <p>Заходишь в Telegram-бота и запускаешь майнеров — они приносят VEL со временем, без сторонних приложений.</p>
+        <h3 data-i18n="card1_h3">Майнинг в боте</h3>
+        <p data-i18n="card1_p">Заходишь в Telegram-бота и запускаешь майнеров — они приносят VEL со временем, без сторонних приложений.</p>
       </div>
       <div class="card">
         <div class="num mono">02</div>
-        <h3>Живая аудитория</h3>
-        <p>Растим сообщество, чтобы предлагать рекламные интеграции и приводить трафик партнёрским продуктам.</p>
+        <h3 data-i18n="card2_h3">Живая аудитория</h3>
+        <p data-i18n="card2_p">Растим сообщество, чтобы предлагать рекламные интеграции и приводить трафик партнёрским продуктам.</p>
       </div>
       <div class="card">
         <div class="num mono">03</div>
-        <h3>Кошелёк VELVE</h3>
-        <p>В разработке — нативный кошелёк для наград, стейкинга и доступа к рекламной сети.</p>
+        <h3 data-i18n="card3_h3">Кошелёк VELVE</h3>
+        <p data-i18n="card3_p">В разработке — нативный кошелёк для наград, стейкинга и доступа к рекламной сети.</p>
       </div>
     </div>
   </section>
 
   <section id="roadmap">
     <div class="section-head">
-      <p class="eyebrow mono">План</p>
-      <h2 class="display">Дорожная карта</h2>
-      <p>Сроки ориентировочные и могут сдвигаться в зависимости от хода разработки и рынка.</p>
+      <p class="eyebrow mono" data-i18n="roadmap_eyebrow">План</p>
+      <h2 class="display" data-i18n="roadmap_h2">Дорожная карта</h2>
+      <p data-i18n="roadmap_p">Сроки ориентировочные и могут сдвигаться в зависимости от хода разработки и рынка.</p>
     </div>
 
     <div class="timeline">
       <article class="phase done">
-        <div class="phase-meta"><span class="pill done">Готово</span><span class="phase-when mono">до Q3 2026</span></div>
-        <h3>Фундамент</h3>
+        <div class="phase-meta"><span class="pill done" data-i18n="phase1_pill">Готово</span><span class="phase-when mono" data-i18n="phase1_when">до Q3 2026</span></div>
+        <h3 data-i18n="phase1_h3">Фундамент</h3>
         <ul>
-          <li>Запуск Telegram-бота с механикой майнеров</li>
-          <li>Выпуск токена VEL в сети GRAM</li>
-          <li>Рост живого комьюнити вокруг бота</li>
+          <li data-i18n="phase1_li1">Запуск Telegram-бота с механикой майнеров</li>
+          <li data-i18n="phase1_li2">Выпуск токена VEL в сети GRAM</li>
+          <li data-i18n="phase1_li3">Рост живого комьюнити вокруг бота</li>
         </ul>
       </article>
 
       <article class="phase active">
-        <div class="phase-meta"><span class="pill active">В работе</span><span class="phase-when mono">Q3 – Q4 2026</span></div>
-        <h3>Листинги и ликвидность</h3>
+        <div class="phase-meta"><span class="pill active" data-i18n="phase2_pill">В работе</span><span class="phase-when mono">Q3 – Q4 2026</span></div>
+        <h3 data-i18n="phase2_h3">Листинги и ликвидность</h3>
         <ul>
-          <li>Первый листинг и живые торги на DEX</li>
-          <li>Заявка на включение в реестр Tonkeeper (ton-assets)</li>
-          <li>Углубление пулов ликвидности</li>
-          <li>Масштабирование базы пользователей бота-майнера</li>
+          <li data-i18n="phase2_li1">Первый листинг и живые торги на DEX</li>
+          <li data-i18n="phase2_li2">Заявка на включение в реестр Tonkeeper (ton-assets)</li>
+          <li data-i18n="phase2_li3">Углубление пулов ликвидности</li>
+          <li data-i18n="phase2_li4">Масштабирование базы пользователей бота-майнера</li>
         </ul>
       </article>
 
       <article class="phase">
-        <div class="phase-meta"><span class="pill planned">План</span><span class="phase-when mono">Q4 2026 – Q1 2027</span></div>
-        <h3>Аудитория и монетизация</h3>
+        <div class="phase-meta"><span class="pill planned" data-i18n="phase3_pill">План</span><span class="phase-when mono">Q4 2026 – Q1 2027</span></div>
+        <h3 data-i18n="phase3_h3">Аудитория и монетизация</h3>
         <ul>
-          <li>Рекламные места для партнёров внутри бота</li>
-          <li>Партнёрства по трафику на внешние продукты</li>
-          <li>Партнёрства с проектами, которым нужен живой трафик</li>
+          <li data-i18n="phase3_li1">Рекламные места для партнёров внутри бота</li>
+          <li data-i18n="phase3_li2">Партнёрства по трафику на внешние продукты</li>
+          <li data-i18n="phase3_li3">Партнёрства с проектами, которым нужен живой трафик</li>
         </ul>
       </article>
 
       <article class="phase">
-        <div class="phase-meta"><span class="pill planned">План</span><span class="phase-when mono">Q1 – Q2 2027</span></div>
-        <h3>Кошелёк VELVE</h3>
+        <div class="phase-meta"><span class="pill planned" data-i18n="phase3_pill">План</span><span class="phase-when mono">Q1 – Q2 2027</span></div>
+        <h3 data-i18n="phase4_h3">Кошелёк VELVE</h3>
         <ul>
-          <li>Разработка нативного кошелька VELVE</li>
-          <li>Начисление наград майнеров напрямую в кошелёк</li>
-          <li>Доступ к рекламной сети через кошелёк</li>
-          <li>Стейкинг в кошельке VELVE</li>
+          <li data-i18n="phase4_li1">Разработка нативного кошелька VELVE</li>
+          <li data-i18n="phase4_li2">Начисление наград майнеров напрямую в кошелёк</li>
+          <li data-i18n="phase4_li3">Доступ к рекламной сети через кошелёк</li>
+          <li data-i18n="phase4_li4">Стейкинг в кошельке VELVE</li>
         </ul>
       </article>
 
       <article class="phase">
-        <div class="phase-meta"><span class="pill planned">План</span><span class="phase-when mono">Q2 2027</span></div>
-        <h3>Расширение экосистемы</h3>
+        <div class="phase-meta"><span class="pill planned" data-i18n="phase3_pill">План</span><span class="phase-when mono">Q2 2027</span></div>
+        <h3 data-i18n="phase5_h3">Расширение экосистемы</h3>
         <ul>
-          <li>Выход на централизованные биржи (CEX)</li>
-          <li>Дальнейший рост ликвидности</li>
-          <li>Развитие кошелька и рекламной сети</li>
+          <li data-i18n="phase5_li1">Выход на централизованные биржи (CEX)</li>
+          <li data-i18n="phase5_li2">Дальнейший рост ликвидности</li>
+          <li data-i18n="phase5_li3">Развитие кошелька и рекламной сети</li>
         </ul>
       </article>
 
       <article class="phase">
-        <div class="phase-meta"><span class="pill planned">План</span><span class="phase-when mono">Q3 – Q4 2027</span></div>
-        <h3>Игровая экосистема</h3>
+        <div class="phase-meta"><span class="pill planned" data-i18n="phase3_pill">План</span><span class="phase-when mono">Q3 – Q4 2027</span></div>
+        <h3 data-i18n="phase6_h3">Игровая экосистема</h3>
         <ul>
-          <li>Создание игрового контента</li>
-          <li>Внедрение токена VELVE для оплаты на сторонних сервисах</li>
+          <li data-i18n="phase6_li1">Создание игрового контента</li>
+          <li data-i18n="phase6_li2">Внедрение токена VELVE для оплаты на сторонних сервисах</li>
         </ul>
       </article>
     </div>
@@ -369,11 +389,11 @@
 
   <section id="join">
     <div class="final">
-      <h2 class="display">Начни майнить за пару минут</h2>
-      <p>Открой бота в Telegram, запусти майнеров и следи за прогрессом в канале проекта.</p>
+      <h2 class="display" data-i18n="join_h2">Начни майнить за пару минут</h2>
+      <p data-i18n="join_p">Открой бота в Telegram, запусти майнеров и следи за прогрессом в канале проекта.</p>
       <div class="cta-row" style="margin-bottom:0;">
-        <a class="btn primary" href="https://t.me/Velveebot" target="_blank" rel="noopener">Открыть бота →</a>
-        <a class="btn ghost" href="https://t.me/Velve_ch" target="_blank" rel="noopener">Telegram-канал</a>
+        <a class="btn primary" data-i18n="cta_open_bot" href="https://t.me/Velveebot" target="_blank" rel="noopener">Открыть бота →</a>
+        <a class="btn ghost" data-i18n="cta_channel" href="https://t.me/Velve_ch" target="_blank" rel="noopener">Telegram-канал</a>
       </div>
     </div>
   </section>
@@ -381,21 +401,177 @@
 
 <footer>
   <div class="flinks">
-    <a href="https://t.me/Velveebot" target="_blank" rel="noopener">Бот</a>
-    <a href="https://t.me/Velve_ch" target="_blank" rel="noopener">Канал</a>
-    <a href="https://tonviewer.com/EQD-dshsvEChhTpmLdUYzMt5JvK9YXXxfwZdybkVTkx3YUgW" target="_blank" rel="noopener">Контракт в эксплорере</a>
+    <a href="https://t.me/Velveebot" target="_blank" rel="noopener" data-i18n="footer_bot">Бот</a>
+    <a href="https://t.me/Velve_ch" target="_blank" rel="noopener" data-i18n="footer_channel">Канал</a>
+    <a href="https://tonviewer.com/EQD-dshsvEChhTpmLdUYzMt5JvK9YXXxfwZdybkVTkx3YUgW" target="_blank" rel="noopener" data-i18n="footer_contract">Контракт в эксплорере</a>
   </div>
-  <p class="fine">VELVE · $VEL на GRAM. Сроки дорожной карты ориентировочные и могут меняться.</p>
+  <p class="fine" data-i18n="footer_fine">VELVE · $VEL на GRAM. Сроки дорожной карты ориентировочные и могут меняться.</p>
 </footer>
 
 <script>
+  var translations = {
+    ru: {
+      title: "VELVE — майни VEL в Telegram",
+      nav_open_bot: "Открыть бота",
+      hero_tagline: "Майни VEL, не выходя из Telegram. Запускай майнеров в боте — они приносят доход, пока ты просто листаешь ленту.",
+      cta_open_bot: "Открыть бота →",
+      cta_channel: "Telegram-канал",
+      fact_ticker_k: "Тикер",
+      fact_network_k: "Сеть",
+      fact_status_v: "в торгах",
+      fact_contract_k: "Контракт",
+      copy_default: "копировать",
+      copy_done: "скопировано",
+      about_eyebrow: "Что это",
+      about_h2: "Бот, который платит за внимание",
+      about_p: "VELVE выращивает живую Telegram-аудиторию через игровую механику майнинга — и монетизирует её в пользу держателей VEL.",
+      card1_h3: "Майнинг в боте",
+      card1_p: "Заходишь в Telegram-бота и запускаешь майнеров — они приносят VEL со временем, без сторонних приложений.",
+      card2_h3: "Живая аудитория",
+      card2_p: "Растим сообщество, чтобы предлагать рекламные интеграции и приводить трафик партнёрским продуктам.",
+      card3_h3: "Кошелёк VELVE",
+      card3_p: "В разработке — нативный кошелёк для наград, стейкинга и доступа к рекламной сети.",
+      roadmap_eyebrow: "План",
+      roadmap_h2: "Дорожная карта",
+      roadmap_p: "Сроки ориентировочные и могут сдвигаться в зависимости от хода разработки и рынка.",
+      phase1_pill: "Готово",
+      phase1_when: "до Q3 2026",
+      phase1_h3: "Фундамент",
+      phase1_li1: "Запуск Telegram-бота с механикой майнеров",
+      phase1_li2: "Выпуск токена VEL в сети GRAM",
+      phase1_li3: "Рост живого комьюнити вокруг бота",
+      phase2_pill: "В работе",
+      phase2_h3: "Листинги и ликвидность",
+      phase2_li1: "Первый листинг и живые торги на DEX",
+      phase2_li2: "Заявка на включение в реестр Tonkeeper (ton-assets)",
+      phase2_li3: "Углубление пулов ликвидности",
+      phase2_li4: "Масштабирование базы пользователей бота-майнера",
+      phase3_pill: "План",
+      phase3_h3: "Аудитория и монетизация",
+      phase3_li1: "Рекламные места для партнёров внутри бота",
+      phase3_li2: "Партнёрства по трафику на внешние продукты",
+      phase3_li3: "Партнёрства с проектами, которым нужен живой трафик",
+      phase4_h3: "Кошелёк VELVE",
+      phase4_li1: "Разработка нативного кошелька VELVE",
+      phase4_li2: "Начисление наград майнеров напрямую в кошелёк",
+      phase4_li3: "Доступ к рекламной сети через кошелёк",
+      phase4_li4: "Стейкинг в кошельке VELVE",
+      phase5_h3: "Расширение экосистемы",
+      phase5_li1: "Выход на централизованные биржи (CEX)",
+      phase5_li2: "Дальнейший рост ликвидности",
+      phase5_li3: "Развитие кошелька и рекламной сети",
+      phase6_h3: "Игровая экосистема",
+      phase6_li1: "Создание игрового контента",
+      phase6_li2: "Внедрение токена VELVE для оплаты на сторонних сервисах",
+      join_h2: "Начни майнить за пару минут",
+      join_p: "Открой бота в Telegram, запусти майнеров и следи за прогрессом в канале проекта.",
+      footer_bot: "Бот",
+      footer_channel: "Канал",
+      footer_contract: "Контракт в эксплорере",
+      footer_fine: "VELVE · $VEL на GRAM. Сроки дорожной карты ориентировочные и могут меняться."
+    },
+    en: {
+      title: "VELVE — mine VEL in Telegram",
+      nav_open_bot: "Open bot",
+      hero_tagline: "Mine VEL without leaving Telegram. Launch miners in the bot — they earn while you just scroll your feed.",
+      cta_open_bot: "Open bot →",
+      cta_channel: "Telegram channel",
+      fact_ticker_k: "Ticker",
+      fact_network_k: "Network",
+      fact_status_v: "trading",
+      fact_contract_k: "Contract",
+      copy_default: "copy",
+      copy_done: "copied",
+      about_eyebrow: "About",
+      about_h2: "The bot that pays for attention",
+      about_p: "VELVE grows a real Telegram audience through game-like mining mechanics — and monetizes it for the benefit of VEL holders.",
+      card1_h3: "Mining in the bot",
+      card1_p: "Open the Telegram bot and launch miners — they earn VEL over time, no third-party apps needed.",
+      card2_h3: "Real audience",
+      card2_p: "We're growing a community to offer ad integrations and drive traffic to partner products.",
+      card3_h3: "VELVE Wallet",
+      card3_p: "In development — a native wallet for rewards, staking, and access to the ad network.",
+      roadmap_eyebrow: "Plan",
+      roadmap_h2: "Roadmap",
+      roadmap_p: "Timelines are estimates and may shift depending on development progress and market conditions.",
+      phase1_pill: "Done",
+      phase1_when: "before Q3 2026",
+      phase1_h3: "Foundation",
+      phase1_li1: "Launch of the Telegram bot with miner mechanics",
+      phase1_li2: "VEL token launch on the GRAM network",
+      phase1_li3: "Growth of a real community around the bot",
+      phase2_pill: "In progress",
+      phase2_h3: "Listings and liquidity",
+      phase2_li1: "First listing and live trading on a DEX",
+      phase2_li2: "Application for inclusion in the Tonkeeper registry (ton-assets)",
+      phase2_li3: "Deepening liquidity pools",
+      phase2_li4: "Scaling the miner bot's user base",
+      phase3_pill: "Planned",
+      phase3_h3: "Audience and monetization",
+      phase3_li1: "Ad placements for partners inside the bot",
+      phase3_li2: "Traffic partnerships with external products",
+      phase3_li3: "Partnerships with projects that need real traffic",
+      phase4_h3: "VELVE Wallet",
+      phase4_li1: "Development of the native VELVE wallet",
+      phase4_li2: "Miner rewards paid directly to the wallet",
+      phase4_li3: "Access to the ad network through the wallet",
+      phase4_li4: "Staking in the VELVE wallet",
+      phase5_h3: "Ecosystem expansion",
+      phase5_li1: "Listing on centralized exchanges (CEX)",
+      phase5_li2: "Further liquidity growth",
+      phase5_li3: "Wallet and ad network development",
+      phase6_h3: "Gaming ecosystem",
+      phase6_li1: "Creation of game content",
+      phase6_li2: "Rollout of the VELVE token for payments on third-party services",
+      join_h2: "Start mining in a couple of minutes",
+      join_p: "Open the bot in Telegram, launch your miners, and follow progress in the project channel.",
+      footer_bot: "Bot",
+      footer_channel: "Channel",
+      footer_contract: "Contract in explorer",
+      footer_fine: "VELVE · $VEL on GRAM. Roadmap timelines are estimates and may change."
+    }
+  };
+
+  var LANG_KEY = "velve-lang";
+  var currentLang = "ru";
+
+  function detectDefaultLang() {
+    var saved = localStorage.getItem(LANG_KEY);
+    if (saved === "ru" || saved === "en") return saved;
+    return (navigator.language || "").toLowerCase().indexOf("ru") === 0 ? "ru" : "en";
+  }
+
+  function applyLang(lang) {
+    if (!translations[lang]) lang = "ru";
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    document.title = translations[lang].title;
+    document.querySelectorAll("[data-i18n]").forEach(function (el) {
+      var key = el.getAttribute("data-i18n");
+      var val = translations[lang][key];
+      if (val != null) el.textContent = val;
+    });
+    document.querySelectorAll(".lang-btn").forEach(function (btn) {
+      btn.classList.toggle("active", btn.getAttribute("data-lang") === lang);
+    });
+    localStorage.setItem(LANG_KEY, lang);
+  }
+
+  document.querySelectorAll(".lang-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      applyLang(btn.getAttribute("data-lang"));
+    });
+  });
+
+  applyLang(detectDefaultLang());
+
   (function () {
     var full = "EQD-dshsvEChhTpmLdUYzMt5JvK9YXXxfwZdybkVTkx3YUgW";
     var btn = document.getElementById("copy-btn");
     btn.addEventListener("click", function () {
       var done = function () {
-        btn.textContent = "скопировано";
-        setTimeout(function () { btn.textContent = "копировать"; }, 1600);
+        btn.textContent = translations[currentLang].copy_done;
+        setTimeout(function () { btn.textContent = translations[currentLang].copy_default; }, 1600);
       };
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(full).then(done).catch(done);
